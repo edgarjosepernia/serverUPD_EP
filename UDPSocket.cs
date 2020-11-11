@@ -10,7 +10,7 @@ namespace UDP_EP
     public class UDPSocket
     {
         private Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        private const int bufSize = 16 * 1024;
+        private const int bufSize = 8 * 1024;
         private State state = new State();
         private EndPoint epFrom = new IPEndPoint(IPAddress.Any, 0);
         private AsyncCallback recv = null;
@@ -30,7 +30,7 @@ namespace UDP_EP
         public void Client(string address, int port)
         {
             _socket.Connect(IPAddress.Parse(address), port);
-            Receive();
+            //Receive();
         }
 
         public void Send(string text)

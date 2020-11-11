@@ -25,8 +25,8 @@ namespace UDP_EP
 
             UDPSocket c = new UDPSocket();
             c.Client(p.ip, p.port);
-
-            c.Send(p.ReadFile(p.path));
+            c.Send("Hola");
+            //c.Send(p.ReadFile(p.path));
 
             Console.ReadKey();
         }
@@ -34,7 +34,7 @@ namespace UDP_EP
         public Program()
         {
             path = @"C:\Users\edgar\Documents\edgar\ENSAM\Ingenierie_RV_RA\ProjetSenior\Serveur_v1\UDP_EP\Coordenates.txt";
-            ip = "127.0.0.1";
+            ip = "192.168.43.31";
             data = "";
             port = 12345;
         }
