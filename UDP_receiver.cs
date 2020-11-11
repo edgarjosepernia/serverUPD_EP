@@ -13,18 +13,25 @@ public class UDP_receiver : MonoBehaviour
 {
     UdpClient Client;
     string data;
-    private const int bufSize = 8 * 1024;
+    public const int bufSize = 8 * 1024;
+    private const int port = 12345;
+    private const string ipAddress = "192.168.43.31";
+
+    private Socket _socket;
+    private State state = new State();
+
     private TMPro.TMP_Text _textChat;
     private GameObject inputFieldSender;
     void Start()
     {
-        Client = new UdpClient(12345);
+        Client = new UdpClient(port);
+        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
         data = "";
         _textChat = GameObject.Find("TextChat").GetComponent<TMPro.TMP_Text>();
         inputFieldSender = GameObject.Find("/Canvas/PanelMain/PanelMiddle/InputField_ToServer/Text");
 
         StartReceive();
-
     }
 
     public void StartReceive()
@@ -41,7 +48,7 @@ public class UDP_receiver : MonoBehaviour
 
     public void recv(IAsyncResult res)
     {
-        IPEndPoint RemoteIp = new IPEndPoint(IPAddress.Any, 12345);
+        IPEndPoint RemoteIp = new IPEndPoint(IPAddress.Any, port);
         byte[] received = Client.EndReceive(res, ref RemoteIp);
         data = "Recived From "+RemoteIp.ToString()+" : "+Encoding.UTF8.GetString(received)+"\n";
         Debug.Log(data);
@@ -54,9 +61,17 @@ public class UDP_receiver : MonoBehaviour
     }
     public void SendToServer()
     {
-        string tosend = inputFieldSender.GetComponent<Text>().text;
-        byte[] dataToSend = Encoding.ASCII.GetBytes(tosend);
-        _textChat.text += "The message <"+tosend+"> have not been sent. Sender in construction. \n";
-        //Client.Send(dataToSend, tosend.Length);
+        string txtToSend = inputFieldSender.GetComponent<Text>().text;
+        byte[] dataToSend = Encoding.ASCII.GetBytes(txtToSend);
+        
+        _socket.Connect(IPAddress.Parse(ipAddress), port);
+        _socket.BeginSend(dataToSend, 0, dataToSend.Length, SocketFlags.None, (ar) =>
+        {
+            State so = (State)ar.AsyncState;
+            int bytes = _socket.EndSend(ar);
+            Console.WriteLine("SEND: {0}, {1}", bytes, txtToSend);
+        }, state);
+        //_textChat.text += "The message <" + tosend + "> have not been sent. Sender in construction. \n";
+        _textChat.text += txtToSend + "\n";
     }
 }

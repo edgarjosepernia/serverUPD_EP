@@ -25,7 +25,7 @@ namespace UDP_EP
 
             UDPSocket c = new UDPSocket();
             c.Client(p.ip, p.port);
-            c.Send("Hola");
+            c.Send("Test in the same build");
             //c.Send(p.ReadFile(p.path));
 
             Console.ReadKey();
