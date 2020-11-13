@@ -34,7 +34,8 @@ namespace UDP_EP
         public Program()
         {
             path = @"C:\Users\edgar\Documents\edgar\ENSAM\Ingenierie_RV_RA\ProjetSenior\Serveur_v1\UDP_EP\Coordenates.txt";
-            ip = "192.168.43.31";
+            //ip = "192.168.43.31";
+            ip = "127.0.0.1";
             data = "";
             port = 12345;
         }
